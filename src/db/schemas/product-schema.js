@@ -22,16 +22,29 @@ const ProductSchema = new Schema(
         type: String,
         required: true,
       },
-      color: {
-        type: String,
-        required: true,
-      },
-      size: {
-        type: String,
-        required: true,
-      },
       description: {
         type: String,
+        required: true,
+      },
+      colors: [
+        {
+          color: {
+            type: Schema.Types.ObjectId,
+            ref: 'colors',
+          },
+        },
+      ],
+      sizes: [
+        {
+          size: {
+            type: Schema.Types.ObjectId,
+            ref: 'sizes',
+          },
+        },
+      ],
+      categories: {
+        type: Schema.Types.ObjectId,
+        ref: 'categories',
         required: true,
       },
     },
@@ -40,5 +53,6 @@ const ProductSchema = new Schema(
       timestamps: true,
     },
 );
+
 
 export {ProductSchema};
