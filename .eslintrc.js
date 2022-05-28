@@ -12,5 +12,16 @@ module.exports = {
   },
   'rules': {
     'require-jsdoc': 0,
+    'linebreak-style': 0,
+    'max-len': 0,
+    'new-cap': 0,
   },
+  'plugins': ['@html-eslint'],
+  'overrides': [
+    {
+      files: ['*.html'],
+      parser: '@html-eslint/parser',
+      extends: ['plugin:@html-eslint/recommended'],
+    },
+  ],
 };
