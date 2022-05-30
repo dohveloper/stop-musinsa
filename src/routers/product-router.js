@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import is from '@sindresorhus/is';
-import {loginRequired} from '../middlewares';
+import {loginRequired, adminRequired} from '../middlewares';
 import {productService} from '../services';
 
 const productRouter = Router();
@@ -36,132 +36,124 @@ productRouter.get('/:productId', async (req, res, next) => {
 });
 
 //  POST api/product (상품 등록)
-productRouter.post('/', loginRequired, async (req, res, next) => {
-  try {
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      throw new Error(
-          'headers의 Content-Type을 application/json으로 설정해주세요',
-      );
-    }
-    // only admin
-    if (req.currentUserRole !== 'admin') {
-      throw new Error(
-          '관리자만 사용 가능한 기능입니다.',
-      );
-    }
-    // product 스키마에 따라
-    const {
-      name,
-      price,
-      image,
-      brand,
-      sex,
-      description,
-      colors,
-      sizes,
-      categories,
-    } = req.body;
+productRouter.post(
+    '/',
+    loginRequired,
+    adminRequired,
+    async (req, res, next) => {
+      try {
+        // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
+        if (is.emptyObject(req.body)) {
+          throw new Error(
+              'headers의 Content-Type을 application/json으로 설정해주세요',
+          );
+        }
+        // product 스키마에 따라
+        const {
+          name,
+          price,
+          image,
+          brand,
+          sex,
+          description,
+          colors,
+          sizes,
+          categories,
+        } = req.body;
 
-    const productInfo = {
-      name,
-      price,
-      image,
-      brand,
-      sex,
-      description,
-      colors,
-      sizes,
-      categories,
-    };
-    const product = await productService.addProduct(productInfo);
-    res.status(200).json(product);
-  } catch (error) {
-    next(error);
-  }
-});
+        const productInfo = {
+          name,
+          price,
+          image,
+          brand,
+          sex,
+          description,
+          colors,
+          sizes,
+          categories,
+        };
+        const product = await productService.addProduct(productInfo);
+        res.status(200).json(product);
+      } catch (error) {
+        next(error);
+      }
+    });
 //  PATCH api/product/:productId (상품 수정)
-productRouter.patch('/:productId', loginRequired, async (req, res, next) => {
-  try {
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      throw new Error(
-          'headers의 Content-Type을 application/json으로 설정해주세요',
-      );
-    }
-    // only admin
-    if (req.currentUserRole !== 'admin') {
-      throw new Error(
-          '관리자만 사용 가능한 기능입니다.',
-      );
-    }
-    const {productId} = req.params;
-    const {
-      name,
-      price,
-      image,
-      brand,
-      sex,
-      description,
-      colors,
-      sizes,
-      categories,
-    } = req.body;
+productRouter.patch(
+    '/:productId',
+    loginRequired,
+    adminRequired,
+    async (req, res, next) => {
+      try {
+        // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
+        if (is.emptyObject(req.body)) {
+          throw new Error(
+              'headers의 Content-Type을 application/json으로 설정해주세요',
+          );
+        }
 
-    const productInfo = {
-      name,
-      price,
-      image,
-      brand,
-      sex,
-      description,
-      colors,
-      sizes,
-      categories,
-    };
-    const product = await productService.setProduct(productId, productInfo);
-    res.status(200).json(product);
-  } catch (error) {
-    next(error);
-  }
-});
+        const {productId} = req.params;
+        const {
+          name,
+          price,
+          image,
+          brand,
+          sex,
+          description,
+          colors,
+          sizes,
+          categories,
+        } = req.body;
+
+        const productInfo = {
+          name,
+          price,
+          image,
+          brand,
+          sex,
+          description,
+          colors,
+          sizes,
+          categories,
+        };
+        const product = await productService.setProduct(productId, productInfo);
+        res.status(200).json(product);
+      } catch (error) {
+        next(error);
+      }
+    });
 
 //  DELETE api/product (전체 상품 삭제)
-productRouter.delete('/', loginRequired, async (req, res, next) => {
-  try {
-    // only admin
-    if (req.currentUserRole !== 'admin') {
-      throw new Error(
-          '관리자만 사용 가능한 기능입니다.',
-      );
-    }
-
-    await productService.deleteProduct();
-    res.status(200).send('상품 삭제 완료');
-  } catch (error) {
-    next(error);
-  }
-});
+productRouter.delete(
+    '/',
+    loginRequired,
+    adminRequired,
+    async (req, res, next) => {
+      try {
+        await productService.deleteProduct();
+        res.status(200).send('상품 삭제 완료');
+      } catch (error) {
+        next(error);
+      }
+    });
 
 //  DELETE api/product/:productId (상품 삭제)
-productRouter.delete('/:productId', loginRequired, async (req, res, next) => {
-  try {
-    // only admin
-    if (req.currentUserRole !== 'admin') {
-      throw new Error(
-          '관리자만 사용 가능한 기능입니다.',
-      );
-    }
-    const {productId} = req.params;
+productRouter.delete(
+    '/:productId',
+    loginRequired,
+    adminRequired,
+    async (req, res, next) => {
+      try {
+        const {productId} = req.params;
 
-    const product = await productService.getProductById(productId);
-    if(!product){
-      throw new Error('삭제할 대상 상품이 없습니다.')
-    }
-    await productService.deleteProduct(productId);
-    res.status(200).send('상품 삭제 완료');
-  } catch (error) {
-    next(error);
-  }
-});
+        const product = await productService.getProductById(productId);
+        if (!product) {
+          throw new Error('삭제할 대상 상품이 없습니다.');
+        }
+        await productService.deleteProduct(productId);
+        res.status(200).send('상품 삭제 완료');
+      } catch (error) {
+        next(error);
+      }
+    });
 export default productRouter;

@@ -34,7 +34,6 @@ orderRouter.get('/non_member/orders', query('phone').isMobilePhone(['ko-KR']),
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
           throw new Error('핸드폰 형식이 아닌 요청입니다. 다시 한 번 확인부탁드립니다.');
-          return;
         }
 
         const order = await orderService.getOrder(orderInfo);
@@ -45,7 +44,11 @@ orderRouter.get('/non_member/orders', query('phone').isMobilePhone(['ko-KR']),
     });
 
 // 전체 주문 목록 조회
-orderRouter.get('/orders', loginRequired, async (req, res, next) => {
+orderRouter.get(
+  '/orders', 
+  loginRequired, 
+  adminRequired,
+  async (req, res, next) => {
   try {
     const orders = await orderService.getOrders();
     res.status(200).json(orders);
