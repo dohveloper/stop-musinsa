@@ -45,7 +45,7 @@ categorytRouter.post(
           throw new Error('이미 해당 카테고리가 존재합니다.');
         }
         const newCategory = await categoryService.createCategory(item, subItem);
-        res.status(200).json(newCategory);
+        res.status(201).json(newCategory);
       } catch (error) {
         next(error);
       }
@@ -63,7 +63,7 @@ categorytRouter.post(
           throw new Error('이미 해당 컬러가 존재합니다.');
         }
         const newColor = await categoryService.createColor(colorName);
-        res.status(200).json(newColor);
+        res.status(201).json(newColor);
       } catch (error) {
         next(error);
       }
@@ -81,7 +81,7 @@ categorytRouter.post(
           throw new Error('이미 해당 사이즈가 존재합니다.');
         }
         const newSize = await categoryService.createSize(sizeName);
-        res.status(200).json(newSize);
+        res.status(201).json(newSize);
       } catch (error) {
         next(error);
       }
