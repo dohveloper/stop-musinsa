@@ -4,17 +4,23 @@ import {OrderSchema} from '../schemas/order-schema';
 const Order = model('orders', OrderSchema);
 
 export class OrderModel {
-  // 주문 조회(회원)
-  async findById(userId) {
-    const order = await Order.findOne({userId: userId}).populate('products');
+  // 주문 조회
+  async findById(orderId) {
+    const order = await Order.findOne({_id: orderId}).populate('products');
     return order;
   }
 
-  // 주문 조회(비회원)
+  // 주문 조회 목록(회원)
+  async findByUserId(userId) {
+    const orderList = await Order.find({userId: userId}).populate('products');
+    return orderList;
+  }
+
+  // 주문 조회 목록(비회원)
   async findByNamePhoneNumber(fullname, phoneNumber) {
     const filter = {fullname: fullname, phoneNumber: phoneNumber};
-    const order = await Order.findOne(filter).populate('products');
-    return order;
+    const orderList = await Order.find(filter).populate('products');
+    return orderList;
   }
 
   // 주문 조회(관리자)
