@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import is from '@sindresorhus/is';
-import {loginRequired, adminRequired} from '../middlewares';
+import {loginRequired, adminRequired, upload} from '../middlewares';
 import {productService} from '../services';
 
 const productRouter = Router();
@@ -18,7 +18,7 @@ productRouter.get('/', async (req, res, next) => {
       // 미적용
       product = await productService.getProducts();
     }
-    res.status(201).json(product);
+    res.status(200).json(product);
   } catch (error) {
     next(error);
   }
@@ -40,6 +40,7 @@ productRouter.post(
     '/',
     loginRequired,
     adminRequired,
+    upload.single('image'),
     async (req, res, next) => {
       try {
         // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
@@ -70,10 +71,10 @@ productRouter.post(
           description,
           colors,
           sizes,
-          categories,
+          categories: {_id: categories},
         };
         const product = await productService.addProduct(productInfo);
-        res.status(200).json(product);
+        res.status(201).json(product);
       } catch (error) {
         next(error);
       }
