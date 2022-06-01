@@ -8,12 +8,9 @@ body {
 
 /* 카트 상단 타이틀 */
 .cart-container {
-  position: absolute;
-  top: 200px;
-  left: 300px;
-  width: calc(100% - 310px);
+  margin: 40px;
+  width: 95%;
   border: 2px solid rgba(34, 34, 37, 0.11);
-  margin-bottom: 100px;
 }
 
 .cart-title-box {
@@ -79,9 +76,16 @@ body {
 
 .product-info {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 60%;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 8px;
 }
 
 .product-option {
@@ -175,7 +179,7 @@ input::-webkit-inner-spin-button {
   all: unset;
   background-color: black;
   color: white;
-  width: 250px;
+  width: 290px;
   height: 60px;
   border-radius: 5px;
   text-align: center;
@@ -186,5 +190,5 @@ input::-webkit-inner-spin-button {
 }
 
 #orderBtn:hover {
-  background-color: rgb(57, 56, 56)
+  background-color: rgb(57, 56, 56);
 }
