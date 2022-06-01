@@ -12,5 +12,5 @@ const ColorSchema = new Schema(
       timestamps: true,
     },
 );
-
+ColorSchema.set('toObject', {getters: true});
 export {ColorSchema};

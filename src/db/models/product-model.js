@@ -16,24 +16,14 @@ export class ProductModel {
   }
 
   // 상품 목록
-  async findAll() {
-    const products = await Product.find({})
+  async findAll(option) {
+    const products = await Product.find(option)
         .populate('colors.color')
         .populate('sizes.size')
-        .populate('categories');
+        .populate('categories')
+        .sort({createdAt: -1})
+        .lean();
 
-    return products;
-  }
-  // 상품 목록 with 페이지네이션
-  async findByPage(page, show) {
-    const products =
-      await Product.find({})
-          .sort({createdAt: -1})
-          .skip(show*(page-1))
-          .limit(show)
-          .populate('colors')
-          .populate('sizes')
-          .populate('categories');
     return products;
   }
   // 카테고리 추가, 카테고리 수정, 상품 수정

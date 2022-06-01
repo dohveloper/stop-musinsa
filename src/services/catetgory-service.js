@@ -79,7 +79,7 @@ class CategoryService {
         replaceCategoryIdArray.map(async ({productId, replaceCategoryId})=>{
           const replaceProduct = await this.productModel.findById(productId);
           const replaceCategory = await this.categoryModel.findById(categoryId);
-          if (!replaceProduct||!replaceCategory) {
+          if (!replaceProduct || !replaceCategory) {
             throw new Error('수정할 대상을 다시 확인해 주세요.');
           }
         }));

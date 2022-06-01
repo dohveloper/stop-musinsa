@@ -36,7 +36,7 @@ export class ColorModel {
   }
 
   async findByName(colorName) {
-    const color = await Color.findOne({colorName});
+    const color = await Color.findOne({colorName}).lean();
     return color;
   }
 }
