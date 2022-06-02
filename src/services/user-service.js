@@ -49,6 +49,15 @@ class UserService {
     return {token};
   }
 
+  // 사용자 정보 조회 후 반환
+  async getUser(userId) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new Error('가입 내역이 없습니다. 다시 한 번 확인해 주세요.');
+    }
+    return user;
+  }
+
   // 사용자 목록을 받음.
   async getUsers() {
     const users = await this.userModel.findAll();
