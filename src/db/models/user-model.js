@@ -1,7 +1,9 @@
 import {model} from 'mongoose';
 import {UserSchema} from '../schemas/user-schema';
+import {WithdrawalSchema} from '../schemas/withdrawal-schema';
 
 const User = model('users', UserSchema);
+const Withdrawal = model('Withdrawals', WithdrawalSchema);
 
 export class UserModel {
   async findByEmail(email) {
@@ -30,6 +32,13 @@ export class UserModel {
 
     const updatedUser = await User.findOneAndUpdate(filter, update, option);
     return updatedUser;
+  }
+
+  async delete(userId) {
+    const user = await User.findById({_id: userId});
+    const withdrawalUser = await Withdrawal.create({email: user.email, fullName: user.fullName, password: user.password});
+    await User.findOneAndDelete({_id: userId});
+    return withdrawalUser.fullName;
   }
 }
 

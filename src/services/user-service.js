@@ -101,6 +101,20 @@ class UserService {
 
     return user;
   }
+
+  // 회원 탈퇴 진행
+  async deleteUser(userId) {
+    const user = await this.userModel.findById(userId);
+
+    // 사용자 가입 유뮤 확인
+    if (!user) {
+      throw new Error('가입 내역이 없습니다. 다시 한 번 확인해 주세요.');
+    }
+
+    // 탈퇴 진행
+    const withdrawalUser = await this.userModel.delete(userId);
+    return withdrawalUser;
+  }
 }
 
 const userService = new UserService(userModel);

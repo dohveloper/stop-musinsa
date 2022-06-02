@@ -139,4 +139,19 @@ userRouter.patch(
     },
 );
 
+// 회원 탈퇴
+userRouter.delete('/', loginRequired, async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+
+    // 현재 로그인된 사용자 회원 탈퇴 진행
+    const deleteUserInfo = await userService.deleteUser(userId);
+
+    // 탈퇴 결과 프론트로 전달
+    res.status(200).json(deleteUserInfo);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default userRouter;
