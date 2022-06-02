@@ -52,8 +52,9 @@ productRouter.post(
     '/',
     loginRequired,
     adminRequired,
-    upload.single('image'),
+    upload.fields([{name: 'detailImage'}, {name: 'image'}]),
     async (req, res, next) => {
+      console.log(req.body);
       try {
         // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
         if (is.emptyObject(req.body)) {
@@ -68,10 +69,15 @@ productRouter.post(
           image,
           brand,
           sex,
-          description,
           colors,
-          sizeIds,
+          sizes,
           categories,
+          modelNumber,
+          season,
+          view,
+          deliveryStart,
+          deliveryMethod,
+          detailImage,
         } = req.body;
 
         const productInfo = {
@@ -80,8 +86,15 @@ productRouter.post(
           image,
           brand,
           sex,
-          description,
+          colors,
+          sizes,
           categories: {_id: categories},
+          modelNumber,
+          season,
+          view,
+          deliveryStart,
+          deliveryMethod,
+          detailImage,
         };
         // populate위한 전처리
         if (Array.isArray(colors)) {
@@ -91,12 +104,12 @@ productRouter.post(
         } else {
           productInfo.colors = {color: {_id: colors}};
         }
-        if (Array.isArray(sizeIds)) {
-          productInfo.sizes = sizeIds.map((id)=>{
+        if (Array.isArray(sizes)) {
+          productInfo.sizes = sizes.map((id)=>{
             return {size: {_id: id}};
           });
         } else {
-          productInfo.sizes = {size: {_id: sizeIds}};
+          productInfo.sizes = {size: {_id: sizes}};
         }
 
         const product = await productService.addProduct(productInfo);

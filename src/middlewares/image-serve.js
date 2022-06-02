@@ -1,3 +1,4 @@
+import {body} from 'express-validator';
 import multer from 'multer';
 
 const storage = multer.diskStorage({
@@ -5,8 +6,12 @@ const storage = multer.diskStorage({
     cb(null, __dirname + '/../views/uploads');
   },
   filename: function(req, file, cb) {
-    const imageName = new Date().valueOf() + '_' + req.body.name + '_' + file.originalname;
-    req.body.image = `http://localhost:${process.env.SERVER_PORT || 5000}/uploads/${imageName}`;
+    const imageName = new Date().valueOf() + '_' + req.body.name + '_' + file.fieldname + '_' + file.originalname;
+    if (file.fieldname === 'image') {
+      req.body.image = `http://localhost:${process.env.SERVER_PORT || 5000}/uploads/${imageName}`;
+    } else {
+      req.body.detailImage = `http://localhost:${process.env.SERVER_PORT || 5000}/uploads/${imageName}`;
+    }
     cb(null, imageName);
   },
 });
