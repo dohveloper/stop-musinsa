@@ -3,6 +3,7 @@ import CategoryEdit from './categoryEdit.js';
 import ProductEdit from './productEdit.js';
 import OrderEdit from './orderEdit.js';
 import UserEdit from './userEdit.js';
+import * as Api from '../../js/api.js';
 export default class Admin {
   sideCategories = ['카테고리', '상품 목록', '주문 목록', '유저 목록'];
   constructor(target) {
@@ -25,16 +26,17 @@ export default class Admin {
     }
   };
 }
-// const token = sessionStorage.getItem('token');
-// console.log(token);
-// if (!token) {
-//   alert('로그인이 필요합니다.');
-//   window.location.replace('/');
-// } else {
-//   if (JWTDecode(token).role !== 'admin') {
-//     alert('로그인이 필요합니다.');
-//     window.location.replace('/');
-//   }
-// }
+const token = sessionStorage.getItem('token');
+
+if (!token) {
+  alert('로그인이 필요합니다.');
+  window.location.replace('/');
+} else {
+  const user = await Api.get('/api/user');
+  if (user.role !== 'admin') {
+    alert('admin 계정이 필요합니다.');
+    window.location.replace('/');
+  }
+}
 const main = document.querySelector('main');
 const admin = new Admin(main);
