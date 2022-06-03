@@ -3,8 +3,8 @@ import express from 'express';
 import {viewsRouter, apiRouter} from './routers';
 import {errorHandler} from './middlewares';
 import passport from 'passport';
-const app = express();
 import passsportRequired from './passport';
+const app = express();
 passsportRequired();
 
 // CORS 에러 방지
