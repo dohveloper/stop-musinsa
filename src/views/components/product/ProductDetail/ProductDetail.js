@@ -28,7 +28,7 @@ export default class ProductDetail extends HTMLElement {
                     </div>
                     <p class="ProductDetailHeader__brand">${product.brand}</p>
                     <h2 class="ProductDetailHeader__title">${product.name}</h2>
-                    <p class="ProductDetailHeader__price">${product.price}원</p>
+                    <p class="ProductDetailHeader__price">${this.numberWithCommas(product.price)}원</p>
                     <div class="ProductDetailHeader__border"></div>
                     <div class="ProductDetailHeader__info">
                         <p class="ProductDetailHeaderInfo__title">게섯거라 판매가</h4>
@@ -66,7 +66,7 @@ export default class ProductDetail extends HTMLElement {
                             </div>
                             <div class="ProductDetailGroupItem">
                                 <h4 class="ProductDetailGroupItem__title">조회수(1개월)</h4>
-                                <p class="ProductDetailGroupItem__content">${product.view}회 이상</p>
+                                <p class="ProductDetailGroupItem__content">${this.numberWithCommas(product.view)}회 이상</p>
                             </div>
                             <div class="ProductDetailGroup__border"></div>
                         </div>
@@ -177,7 +177,7 @@ export default class ProductDetail extends HTMLElement {
 
   getPoint(price) {
     // 적립금 구하기
-    const percentage = 10;
+    const percentage = 5;
     const point = parseInt(price * percentage / 100); ;
     return this.numberWithCommas(point);
   }
