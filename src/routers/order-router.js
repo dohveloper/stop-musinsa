@@ -60,9 +60,9 @@ orderRouter.get(
 // 주문 추가
 orderRouter.post('/', async (req, res, next) => {
   try {
+    const token = req.headers['authorization']?.split(' ')[1];
     const {
       products,
-      userId,
       fullname,
       phoneNumber,
       address,
@@ -72,12 +72,12 @@ orderRouter.post('/', async (req, res, next) => {
 
     const orderInfo = {
       products: products,
-      userId: userId,
       fullname: fullname,
       phoneNumber: phoneNumber,
       address: address,
       total: total,
       paymentMethod: paymentMethod,
+      token: token,
     };
     const newOrder = await orderService.addOrder(orderInfo);
     res.status(201).json(newOrder);

@@ -1,4 +1,5 @@
 import {orderModel} from '../db';
+import jwt from 'jsonwebtoken';
 
 class OrderService {
   constructor(orderModel) {
@@ -30,6 +31,16 @@ class OrderService {
 
   // 주문 추가
   async addOrder(orderInfo) {
+    const {token} = orderInfo;
+    if (token) {
+      const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
+      const jwtDecoded = jwt.verify(token, secretKey);
+      const {userId} = jwtDecoded;
+
+      orderInfo.userId = userId;
+    }
+    delete orderInfo.token;
+    console.log(orderInfo);
     const createNewOrder = await this.orderModel.create(orderInfo);
     return createNewOrder;
   }
@@ -50,6 +61,6 @@ class OrderService {
 }
 
 const orderService = new OrderService(orderModel);
-const nonMemberId ='Non-member';
+const nonMemberId = 'Non-member';
 
 export {orderService};

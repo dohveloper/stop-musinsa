@@ -3,10 +3,10 @@ import {Schema} from 'mongoose';
 const OrderSchema = new Schema(
     {
       products: [{
-        product:{
-        type: Schema.Types.ObjectId,
-        ref: 'products',
-        required: true,
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'products',
+          required: true,
         },
         count: {
           type: Number,
