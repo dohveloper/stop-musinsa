@@ -55,13 +55,13 @@ export default class ProductEdit {
         `;
     colors.forEach((color, index)=>{
       this.form.innerHTML += `
-            <label><input type="checkbox" name="colors[${index}]" value='${color._id}' ${index === 0 ? 'required' : null}> ${color.colorName}</label>
+            <label><input type="checkbox" name="colors[${index}]" value='${color._id}'> ${color.colorName}</label>
         `;
     });
     this.form.innerHTML += `<p>사이즈 선택</p>`;
     sizes.forEach((size, index)=>{
       this.form.innerHTML += `
-            <label><input type="checkbox" name="sizes[${index}]" value='${size._id}' ${index === 0 ? 'required' : null}}> ${size.sizeName}</label>
+            <label><input type="checkbox" name="sizes[${index}]" value='${size._id}'> ${size.sizeName}</label>
         `;
     });
     this.form.innerHTML += `<p>카테고리</p>`;
