@@ -28,8 +28,3 @@ export const wait = (ms) => {
   return new Promise((r) => setTimeout(r, ms));
 };
 
-// 유저 정보 반환
-export const JWTDecode = (token) => {
-  const {userId, role} = JSON.parse(atob(token.split('.')[1]));
-  return {userId, role};
-};

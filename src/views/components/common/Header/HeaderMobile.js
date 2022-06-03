@@ -1,4 +1,5 @@
-import {JWTDecode} from '../../../js/useful-functions.js';
+import * as Api from '../../../js/api.js';
+
 export default class HeaderMobile extends HTMLElement {
   constructor() {
     super();
@@ -78,17 +79,20 @@ export default class HeaderMobile extends HTMLElement {
       this.querySelector('.HeaderMobile__detail').style.display = 'none';
     }
   }
-  renderByRole() {
+  async renderByRole() {
     const token = sessionStorage.getItem('token');
-    const {role} = JWTDecode(token);
     const nav = document.querySelector('.HeaderMobileDefaultNav__list');
 
-    if (role === 'admin') {
-      nav.innerHTML += `
+    if (token) {
+      const user = await Api.get('/api/user');
+      console.log(user);
+      if (user.role === 'admin') {
+        nav.innerHTML += `
             <li class="HeaderMobileDefaultNavItem">
                 <a class="HeaderMobileDefaultNavItem__link" href="/admin">admin</a>
             </li>
         `;
+      }
     }
   }
 }
