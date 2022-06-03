@@ -132,7 +132,7 @@ export default class ProductDetail extends HTMLElement {
                      </div>
                      <div class="ProductDetailMobileContent__info">
                         <p class="ProductDetailMobileContentInfo__title">조회수 (1개월)</h4>
-                        <p class="ProductDetailMobileContentInfo__body">${product.view}회 이상</p>
+                        <p class="ProductDetailMobileContentInfo__body">${this.numberWithCommas(product.view)}회 이상</p>
                      </div>
                      <div class="ProductDetailMobileContent__info">
                         <p class="ProductDetailMobileContentInfo__title">출고정보</h4>
