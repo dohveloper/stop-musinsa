@@ -3,7 +3,7 @@ export default class ProductList extends HTMLElement {
   constructor() {
     super();
     this.page = 1;
-    this.show = 30;
+    this.show = 5;
   }
   async connectedCallback() {
     const title = this.getAttribute('title') ? ' - ' + this.getAttribute('title') : '';
@@ -23,33 +23,29 @@ export default class ProductList extends HTMLElement {
     linkElem.setAttribute('href', '/src/views/components/product/ProductList/ProductList.css');
     this.appendChild(linkElem);
 
+    // Add products
+    const products = await this.fetchProducts();
+    this.page++;
+    this.addProductCards(products);
 
-    // fetch data
-    // Product Card 동적으로 추가
-    const numberOfProducts = await this.addProductCards();
     // 충분한 제품수가 있을때만 무한스크롤
-    if (numberOfProducts > 20) {
+    const numberOfProducts = products.length;
+    if (numberOfProducts > 0) {
       this.addInfiniteScroll();
     }
   }
-  async addProductCards(n) {
+
+
+  // Add Products
+  async fetchProducts() {
     const requestUrl = `/api/product?page=${this.page}&show=${this.show}`;
     const products = await Api.get(requestUrl);
-    this.page++;
-
-    /* test code
-    // const products = this.createSampleProducts(20);
-    const data = await Api.get(requestUrl);
-    let products = [];
-    for (let i = 0; i <= 20; i++) {
-      products = products.concat(data);
-    };
-    */
-
+    return products;
+  }
+  addProductCards(products) {
     products.forEach((product) => {
       this.addProductCard(product);
     });
-    return products.length;
   }
   addProductCard(product) {
     const productList = document.querySelector('.ProductList__products');
@@ -57,6 +53,70 @@ export default class ProductList extends HTMLElement {
     productCard.product = product;
     productList.appendChild(productCard);
   }
+  // Add Loading Items
+  addInfiniteScroll() {
+    const observerCallback = (entries, observer) => {
+      entries.forEach(async (entry) => {
+        if (entry.isIntersecting) {
+          // product fetch
+          this.page++;
+          const products = await this.fetchProducts();
+
+          if (products.length === 0) {
+            const footer = document.querySelector('.Footer__contact');
+            observer.unobserve(footer);
+          } else {
+            // 로딩 아이템 추가
+            this.addLoadingElements(products.length);
+
+            setTimeout(async () => {
+              // 리스트에 실제 아이템 추가
+              this.addProductCards(products);
+
+              // 로딩아이템 삭제
+              this.removeLoadingElements();
+            }, 600);
+          }
+        }
+      });
+    };
+    const observer = new IntersectionObserver(observerCallback, {threshold: 1});
+    // Observe Footer
+    const footer = document.querySelector('.Footer__contact');
+    observer.observe(footer);
+  }
+  addLoadingElements(numberOfProducts) {
+    // add skeleton cards
+    const productList = document.querySelector('.ProductList__products');
+    for (let i = 0; i < numberOfProducts; i++) {
+      const skeletonCard = document.createElement('product-card-skeleton');
+      productList.appendChild(skeletonCard);
+    }
+
+    // // add spinner
+    // const bottom = document.querySelector('.ProductList__container');
+    // const spinner = document.createElement('common-spinner');
+    // bottom.appendChild(spinner);
+  }
+  removeLoadingElements() {
+    // remove skeleton cards
+    const productList = document.querySelector('.ProductList__products');
+    const skeletonCards = productList.getElementsByTagName('product-card-skeleton');
+    while (skeletonCards.length) {
+      productList.removeChild(skeletonCards[0]);
+    }
+    // // remove spinner
+    // const bottom = document.querySelector('.ProductList__container');
+    // const spinner = document.getElementsByTagName('common-spinner')[0];
+    // bottom.removeChild(spinner);
+  }
+  observeLastItem(observer, items) {
+    const lastItem = items[items.length - 1];
+    if (lastItem) {
+      observer.observe(lastItem);
+    }
+  }
+  // Test
   createSampleProducts(n) {
     // test code start
     const products = [];
@@ -103,80 +163,6 @@ export default class ProductList extends HTMLElement {
     }
     return products;
     // test code end
-  }
-  addInfiniteScroll() {
-    const observerCallback = (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            this.addLoadingElements();
-          }, 300);
-          setTimeout(() => {
-            // 리스트에서 Spinner, Skeleton items  삭제
-            this.removeLoadingElements();
-            // API 호출 - 새 컨텐츠를 붙임
-            const numberOfProducts = this.addProductCards(20);
-            if (numberOfProducts < 20) {
-              const footer = document.querySelector('.Footer__contact');
-              observer.unobserve(footer);
-            }
-          }, 1000);
-        }
-      });
-    };
-    const observer = new IntersectionObserver(observerCallback, {threshold: 1});
-    const footer = document.querySelector('.Footer__contact');
-    observer.observe(footer);
-  }
-  addLoadingElements() {
-    // productCard 추가
-    this.addSkeletonCards();
-    this.addSpinner();
-  }
-  removeLoadingElements() {
-    // remove skeleton cards
-    const productList = document.querySelector('.ProductList__products');
-    const skeletonCards = productList.getElementsByTagName('product-card-skeleton');
-    while (skeletonCards.length) {
-      productList.removeChild(skeletonCards[0]);
-    }
-    // remove spinner
-    const bottom = document.querySelector('.ProductList__container');
-    const spinner = document.getElementsByTagName('common-spinner')[0];
-    bottom.removeChild(spinner);
-  }
-  addSkeletonCards() {
-    const productList = document.querySelector('.ProductList__products');
-    for (let i = 0; i < 8; i++) {
-      const skeletonCard = document.createElement('product-card-skeleton');
-      productList.appendChild(skeletonCard);
-    }
-  }
-  addSpinner() {
-    // spinner 추가
-    const bottom = document.querySelector('.ProductList__container');
-    const spinner = document.createElement('common-spinner');
-    bottom.appendChild(spinner);
-  }
-  removeSkeletonCards() {
-    // remove skeleton cards
-    const productList = document.querySelector('.ProductList__products');
-    const skeletonCards = productList.getElementsByTagName('product-card-skeleton');
-    while (skeletonCards.length) {
-      productList.removeChild(skeletonCards[0]);
-    }
-  }
-  removeSpinner() {
-    // remove spinner
-    const bottom = document.querySelector('.ProductList__container');
-    const spinner = document.getElementsByTagName('common-spinner')[0];
-    bottom.removeChild(spinner);
-  }
-  observeLastItem(observer, items) {
-    const lastItem = items[items.length - 1];
-    if (lastItem) {
-      observer.observe(lastItem);
-    }
   }
 }
 window.customElements.define('product-list', ProductList);
