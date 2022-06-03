@@ -3,10 +3,53 @@ import * as Api from '../../../js/api.js';
 export default class HeaderPC extends HTMLElement {
   constructor() {
     super();
-    // html 추가
+    // 로그인 여부
+    const token = sessionStorage.getItem('token');
+    this.isLogin = token ? true : false;
+  }
+  connectedCallback() {
     this.innerHTML = `
         <div class="Header__pc">
-                <div class="Header__main">
+            ${this.renderHeaderMain()}
+            ${this.renderHeaderSub()}
+            ${this.renderHeaderMember()}                
+        </div>
+    `;
+    this.renderByRole();
+    this.addLogoutFeature();
+  }
+
+
+  renderHeaderMain() {
+    const menusWithoutLogin = ` <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link HeaderMainNavItem__link--active" href="/">홈</a>
+                            </li>
+                            <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link" href="/register">회원가입</a>
+                            </li>
+                            <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link" href="/cart">장바구니</a>
+                            </li>
+                            <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link" href="/login">로그인</a>
+                            </li>
+                            `;
+    const menusWithLogin = ` <li class="HeaderMainNavItem">
+                                    <a class="HeaderMainNavItem__link HeaderMainNavItem__link--active" href="/">홈</a>
+                            </li>
+                            
+                            <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link" href="/updateInfo">마이페이지</a>
+                            </li>
+                            <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link" href="/cart">장바구니</a>
+                            </li>
+                            <li class="HeaderMainNavItem">
+                                <a class="HeaderMainNavItem__link Header__logout" href="#">로그아웃</a>
+                            </li>
+                            `;
+
+    const html = ` <div class="Header__main">
                     <div class="HeaderMain__container Site__container">
                         <div class="HeaderMain__left">
                             <h1 class="HeaderMain__logo">
@@ -17,40 +60,22 @@ export default class HeaderPC extends HTMLElement {
                         <div class="HeaderMain__right">
                             <nav class="HeaderMainNav">
                                 <ul class="HeaderMainNav__list">
-                                    <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link HeaderMainNavItem__link--active" href="/">홈</a>
-                                        <div class="HeaderMainNavItem__underbar"></div>
-                                    </li>
-                                    <!--
-                                    <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link" href="/tops">상의</a>
-                                    </li>
-                                    <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link" href="/pants">바지</a>
-                                    </li>
-                                    <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link" href="/outwears">아우터</a>
-                                    </li>
-                                    -->
-                                     <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link" href="/login">로그인</a>
-                                    </li>
-                                    <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link" href="/register">회원가입</a>
-                                    </li>
-                                    <li class="HeaderMainNavItem">
-                                        <a class="HeaderMainNavItem__link" href="/cart">장바구니</a>
-                                    </li>
+                                   ${this.isLogin ? menusWithLogin : menusWithoutLogin }
                                 </ul>
                             </nav>
                         </div>
                     </div>
-                </div>
-                <div class="Header__sub">
+                </div>`;
+    return html;
+  }
+  renderHeaderSub() {
+    const html = `<div class="Header__sub">
                     <div class="HeaderSub__container Site__container">무신사 게섯거라</div>
-                </div>
-                <div class="Header__member">
-                    <div class="HeaderMember__container Site__container">
+                  </div>`;
+    return html;
+  }
+  renderHeaderMember() {
+    const menusWithoutLogin = ` 
                         <a class="HeaderMemberButton__link" href="/login">
                             <button class="Button Button--outline">로그인</button>
                         </a>
@@ -60,43 +85,58 @@ export default class HeaderPC extends HTMLElement {
                             </div>
                             <div class="HeaderMemberMenu">
                                 <a class="HeaderMemberMenu__link" href="/cart">장바구니</a>
-                                <span class="HeaderMemberMenu__badge">0</span>
                             </div>
                             <div class="HeaderMemberMenu">
                                 <a class="HeaderMemberMenu__link" href="/register">회원 가입 EVENT. 신규 가입 후 바로 사용 가능한 18% 할인 쿠폰 / 게섯거라 스탠다드 990원 구매 기회</a>
                             </div>
                         </div>
+                            `;
+    const menusWithLogin = ` 
+                        <a class="HeaderMemberButton__link" >
+                            <button class="Button Button--outline Header__logout">로그아웃</button>
+                        </a>
+                        <div class="HeaderMemberMenus">
+                            <div class="HeaderMemberMenu">
+                                <a class="HeaderMemberMenu__link" href="/updateInfo">마이페이지</a>
+                            </div>
+                            <div class="HeaderMemberMenu">
+                                <a class="HeaderMemberMenu__link" href="/cart">장바구니</a>                                
+                            </div>
+                            <div class="HeaderMemberMenu">
+                                <a class="HeaderMemberMenu__link" href="#" onclick="alert('환영합니다?')">무신사 게섯거라에 오신 것을 환영합니다.</a>
+                            </div>
+                        </div>
+                                `;
+    const html = `
+                <div class="Header__member">
+                    <div class="HeaderMember__container Site__container">
+                         ${this.isLogin ? menusWithLogin : menusWithoutLogin }
                     </div>
                 </div>
-            </div>
-    `;
-    this.renderByRole();
+                `;
+    return html;
+  }
+  addLogoutFeature() {
+    const logoutElements = document.querySelectorAll('.Header__logout');
+    console.log(logoutElements);
+    for (const logoutElement of logoutElements) {
+      logoutElement.addEventListener('click', ()=>{
+        sessionStorage.removeItem('token');
+        window.location.replace('/');
+      });
+    };
   }
 
   async renderByRole() {
     const token = sessionStorage.getItem('token');
     const nav = document.querySelector('.HeaderMainNav__list');
-    const member = document.querySelectorAll('.HeaderMember__container', '.Site__container')[0];
-    // 로그인 되어있을 시 로그아웃버튼
     if (token) {
-      member.innerHTML = `
-        <a class="HeaderMemberButton__link">
-            <button class="Button Button--outline">로그아웃</button>
-        </a>
-        <div class="HeaderMemberMenus">환영합니다!</div>`;
-
-      member.firstElementChild.addEventListener('click', ()=>{
-        sessionStorage.removeItem('token');
-        window.location.replace('/');
-      });
-
       const user = await Api.get('/api/user');
-      console.log(user);
       // admin 계정
       if (user.role === 'admin') {
         nav.innerHTML += `
             <li class="HeaderMainNavItem">
-                <a class="HeaderMainNavItem__link" href="/admin">admin</a>
+                <a class="HeaderMainNavItem__link" href="/admin">ADMIN</a>
             </li>
         `;
       }
