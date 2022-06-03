@@ -120,6 +120,7 @@ categorytRouter.patch(
         const {newSubCategory} = req.body;
 
         const category = await categoryService.getCategoryByName(categoryName, subCategoryName);
+
         if (!category) {
           throw new Error('수정할 대상 카테고리가 없습니다.');
         }
@@ -183,7 +184,7 @@ categorytRouter.delete(
         }
         await categoryService.deleteCategory(categoryId, replaceCategoryIdArray);
 
-        res.status(200).json();
+        res.status(200).json({});
       } catch (error) {
         next(error);
       }
@@ -204,7 +205,7 @@ categorytRouter.delete(
 
         await categoryService.deleteColor(colorId);
 
-        res.status(200).json();
+        res.status(200).json({});
       } catch (error) {
         next(error);
       }
@@ -223,7 +224,7 @@ categorytRouter.delete(
         }
         await categoryService.deleteSize(sizeId);
 
-        res.status(200).json();
+        res.status(200).json({});
       } catch (error) {
         next(error);
       }

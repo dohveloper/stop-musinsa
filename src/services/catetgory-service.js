@@ -47,7 +47,7 @@ class CategoryService {
   }
 
   async updateSubCategory(categoryId, updateData) {
-    const category = this.categoryModel.findById(categoryId);
+    const category = await this.categoryModel.findById(categoryId);
 
     if (!category) {
       throw new Error('수정 할 대상 카테고리가 없습니다.');
@@ -56,14 +56,14 @@ class CategoryService {
     return await this.categoryModel.updateByCategoryName(category.item, category.subItem, updateData);
   }
   async updateColor(colorId, updateName) {
-    const color = this.colorModel.findById(colorId);
+    const color = await this.colorModel.findById(colorId);
     if (!color) {
       throw new Error('수정할 대상 색상이 없습니다.');
     }
     return await this.colorModel.update(colorId, updateName);
   }
   async updateSize(sizeId, updateName) {
-    const size = this.sizeModel.findById(sizeId);
+    const size = await this.sizeModel.findById(sizeId);
     if (!size) {
       throw new Error('수정할 대상 사이즈가 없습니다.');
     }

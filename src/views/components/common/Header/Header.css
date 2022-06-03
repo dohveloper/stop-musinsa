@@ -122,6 +122,9 @@
 .HeaderMemberMenu {
     font-size: 12px;
 }
+HeaderMemberButton__link{
+    text-decoration: none;
+}
 
 .HeaderMemberMenu__link {
     top: 0;

@@ -123,8 +123,10 @@ productRouter.patch(
     '/:productId',
     loginRequired,
     adminRequired,
+    upload.fields([{name: 'detailImage'}, {name: 'image'}]),
     async (req, res, next) => {
       try {
+        const {productId} = req.params;
         // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
         if (is.emptyObject(req.body)) {
           throw new Error(
@@ -139,10 +141,15 @@ productRouter.patch(
           image,
           brand,
           sex,
-          description,
-          colorIds,
+          colors,
           sizes,
           categories,
+          modelNumber,
+          season,
+          view,
+          deliveryStart,
+          deliveryMethod,
+          detailImage,
         } = req.body;
 
         const productInfo = {
@@ -151,16 +158,24 @@ productRouter.patch(
           image,
           brand,
           sex,
-          description,
+          colors,
+          sizes,
           categories: {_id: categories},
+          modelNumber,
+          season,
+          view,
+          deliveryStart,
+          deliveryMethod,
+          detailImage,
+
         };
         // populate위한 전처리
-        if (Array.isArray(colorIds)) {
-          productInfo.colors = colorIds.map((id)=>{
+        if (Array.isArray(colors)) {
+          productInfo.colors = colors.map((id)=>{
             return {color: {_id: id}};
           });
         } else {
-          productInfo.colors = {color: {_id: colorIds}};
+          productInfo.colors = {color: {_id: colors}};
         }
         if (Array.isArray(sizes)) {
           productInfo.sizes = sizes.map((id)=>{
@@ -185,7 +200,7 @@ productRouter.delete(
     async (req, res, next) => {
       try {
         await productService.deleteProduct();
-        res.status(200).send('상품 삭제 완료');
+        res.status(200).json('상품 삭제 완료');
       } catch (error) {
         next(error);
       }
@@ -205,7 +220,7 @@ productRouter.delete(
           throw new Error('삭제할 대상 상품이 없습니다.');
         }
         await productService.deleteProduct(productId);
-        res.status(200).send('상품 삭제 완료');
+        res.status(200).json('상품 삭제 완료');
       } catch (error) {
         next(error);
       }

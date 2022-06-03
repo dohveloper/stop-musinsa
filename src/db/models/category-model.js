@@ -13,16 +13,17 @@ export class CategoryModel {
 
   async updateByCategoryName(categoryName, subCategoryName, updateData) {
     const option = {returnOriginal: false};
-    const filter = {item: categoryName};
+    const filter = {item: categoryName, subItem: subCategoryName};
+
     let updatedCategory;
     if (subCategoryName) {
-      filter={subItem: subCategoryName};
       // 서브 카테고리 수정
       updatedCategory = await Category.findOneAndUpdate(filter, updateData, option);
     } else {
       // 메인 카테고리 해당 목록 전원 수정
       updatedCategory = await Category.updateMany(filter, updateData, option);
     }
+    console.log(updatedCategory);
     return updatedCategory;
   }
   // replaceCategoryIdArray: Array<{productId:Schema.Types.ObjectId, replaceCategoryId: Schema.Types.ObjectId}>
