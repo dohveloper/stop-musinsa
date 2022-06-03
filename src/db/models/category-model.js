@@ -37,7 +37,7 @@ export class CategoryModel {
   }
 
   async findAll() {
-    const category = await Category.find();
+    const category = await Category.find().sort({createdAt: -1});
     return category;
   }
 
@@ -51,7 +51,7 @@ export class CategoryModel {
     if (subCategoryName) {
       category = await Category.findOne({item: categoryName, subItem: subCategoryName});
     } else {
-      category = await Category.find({item: categoryName});
+      category = await Category.find({item: categoryName}).sort({createdAt: -1});
     }
     return category;
   }

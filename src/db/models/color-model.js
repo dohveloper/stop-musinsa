@@ -31,7 +31,7 @@ export class ColorModel {
   }
 
   async findAll() {
-    const color = await Color.find();
+    const color = await Color.find().sort({createdAt: -1});
     return color;
   }
 

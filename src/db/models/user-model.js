@@ -22,7 +22,8 @@ export class UserModel {
   }
 
   async findAll() {
-    const users = await User.find({});
+    const users = await User.find({})
+        .sort({createdAt: -1});
     return users;
   }
 

@@ -8,12 +8,14 @@ export default class Admin {
   sideCategories = ['카테고리', '상품 목록', '주문 목록', '유저 목록'];
   constructor(target) {
     this.page = '';
+    // 사이드 바 세팅
     this.sideContainer = document.querySelector('.SideBarContainer');
     this.editContainer = document.querySelector('.EditContainer');
     this.edit = new CategoryEdit(this.editContainer);
     this.sidebar = new Sidebar(this.sideContainer, this.sideCategories, this.setPage);
   }
 
+  // 사이드 바 클릭에 따른 페이지 동적 생성
   setPage = (page)=>{
     if (page === '카테고리') {
       this.edit = new CategoryEdit(this.editContainer);
@@ -28,6 +30,7 @@ export default class Admin {
 }
 const token = sessionStorage.getItem('token');
 
+// admin 외 계정 접근제한
 if (!token) {
   alert('로그인이 필요합니다.');
   window.location.replace('/');
@@ -38,5 +41,7 @@ if (!token) {
     window.location.replace('/');
   }
 }
+
+// page initialize
 const main = document.querySelector('main');
 const admin = new Admin(main);

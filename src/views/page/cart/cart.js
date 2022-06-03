@@ -11,7 +11,7 @@ const PRODUCTS_KEY = 'products';
 let sum = 0;
 
 
-let products = [{_id: 'djf20', url: '../../assets/favicon.png', name: '나이키', size: 'L', price: '19000', quantity: 1}, {_id: '12fd1', url: '../../assets/favicon.png', name: '나이키', size: 'L', price: '19000', quantity: 1}];
+let products = [];
 
 
 // 로컬스토리지 저장

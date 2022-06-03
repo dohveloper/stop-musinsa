@@ -12,20 +12,20 @@ export class OrderModel {
 
   // 주문 조회 목록(회원)
   async findByUserId(userId) {
-    const orderList = await Order.find({userId: userId}).populate('products.product');
+    const orderList = await Order.find({userId: userId}).populate('products.product').sort({createdAt: -1});
     return orderList;
   }
 
   // 주문 조회 목록(비회원)
   async findByNamePhoneNumber(fullname, phoneNumber) {
     const filter = {fullname: fullname, phoneNumber: phoneNumber};
-    const orderList = await Order.find(filter).populate('products.product');
+    const orderList = await Order.find(filter).populate('products.product').sort({createdAt: -1});
     return orderList;
   }
 
   // 주문 조회(관리자)
   async findAll() {
-    const orders = await Order.find({}).populate('products.product');
+    const orders = await Order.find({}).populate('products.product').sort({createdAt: -1});
     return orders;
   }
 

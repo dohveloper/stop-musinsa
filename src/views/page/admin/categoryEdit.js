@@ -13,6 +13,7 @@ export default class CategoryEdit {
     this.render();
   }
 
+  // 카테고리 목록 불러오기
   async fetchCategory() {
     const categories = await Api.get('/api/category');
     return categories;
@@ -22,6 +23,7 @@ export default class CategoryEdit {
     this.title.innerText = '카테고리';
     this.fetchCategory().then((categories)=>{
       categories.forEach((category)=>{
+        // 카테고리별  form 블럭
         const form = document.createElement('form');
         form.className = 'categoryUpdateForm';
         form.innerHTML = `
@@ -36,6 +38,7 @@ export default class CategoryEdit {
         `;
         this.content.appendChild(form);
 
+        // 카테고리 수정 액션
         form.addEventListener('submit', async (e)=>{
           e.preventDefault();
           const formData = new FormData(e.target);
@@ -49,6 +52,8 @@ export default class CategoryEdit {
           }
         });
       });
+
+      // 새 카테고리 생성
       const registerForm = document.createElement('form');
       this.content.appendChild(registerForm);
       registerForm.className = 'categoryUpdateForm';

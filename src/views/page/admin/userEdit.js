@@ -29,7 +29,7 @@ export default class UserEdit {
       await this.userli(user, this.userContainer);
     });
   }
-
+  // 유저 목록 블럭 동적생성
   async userli(data, target) {
     const container = document.createElement('div');
     container.className = 'orderContents';

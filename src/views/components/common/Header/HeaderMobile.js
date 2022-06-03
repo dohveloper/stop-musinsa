@@ -100,6 +100,7 @@ export default class HeaderMobile extends HTMLElement {
     const token = sessionStorage.getItem('token');
     const nav = document.querySelector('.HeaderMobileDefaultNav__list');
 
+    // admin 계정에 대응해 admin navigation을 동적으로 생성
     if (token) {
       const user = await Api.get('/api/user');
       console.log(user);

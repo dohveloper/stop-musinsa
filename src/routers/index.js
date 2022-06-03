@@ -10,7 +10,7 @@ const apiRouter = express.Router();
 const indexJs = path.basename(__filename);
 
 fs.readdirSync(__dirname)
-    .filter((file) => (file.indexOf('.') !== 0) && (file !== indexJs) && (file.split('-')[0]!=='views') && (file.slice(-9) === 'router.js'))
+    .filter((file) => (file.indexOf('.') !== 0) && (file !== indexJs) && (file.split('-')[0] !== 'views') && (file.slice(-9) === 'router.js'))
     .forEach((routeFile) => apiRouter.use(`/${routeFile.split('-')[0]}`, require(`./${routeFile}`).default));
 
 export {apiRouter};
