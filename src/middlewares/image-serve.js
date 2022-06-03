@@ -8,9 +8,9 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {
     const imageName = new Date().valueOf() + '_' + req.body.name + '_' + file.fieldname + '_' + file.originalname;
     if (file.fieldname === 'image') {
-      req.body.image = `http://localhost:${process.env.SERVER_PORT || 5000}/uploads/${imageName}`;
+      req.body.image = `http://kdt-sw2-seoul-team02.elicecoding.com/uploads/${imageName}`;
     } else {
-      req.body.detailImage = `http://localhost:${process.env.SERVER_PORT || 5000}/uploads/${imageName}`;
+      req.body.detailImage = `http://kdt-sw2-seoul-team02.elicecoding.com/uploads/${imageName}`;
     }
     cb(null, imageName);
   },
