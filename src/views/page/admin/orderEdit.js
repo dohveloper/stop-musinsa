@@ -67,6 +67,7 @@ export default class OrderEdit {
       // 주문 상태 변경
       selectState.addEventListener('change', async (e)=>{
         await Api.patch(`/api/order/orders`, data._id + '/' + e.target.value);
+        alert('변경되었습니다.');
       });
       selectConteiner.appendChild(selectState);
     }
