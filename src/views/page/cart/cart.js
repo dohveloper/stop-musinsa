@@ -12,7 +12,7 @@ let sum = 0;
 
 
 // 예시코드
-// let DEFAUTL_PRODUCTS = [{_id: '629913727585ca9d9ab3cbea', image: 'http://localhost:5000/uploads/1654199154357_ser_image_logisim1.png', name: 'ser', option: 'Large', price: '23', quantity: 1, checked: true}, {_id: '6298dfa9549dddaa414663c5', image: 'http://localhost:5000/uploads/1654185897819_좋은 바_image_logisim1.png', name: '좋은 바', option: 'Large', price: '30000', quantity: 1, checked: true}];
+const DEFAUTL_PRODUCTS = [{_id: '629913727585ca9d9ab3cbea', image: 'http://localhost:5000/uploads/1654199154357_ser_image_logisim1.png', name: 'ser', option: 'Large', price: '23', quantity: 1, checked: true}, {_id: '6298dfa9549dddaa414663c5', image: 'http://localhost:5000/uploads/1654185897819_좋은 바_image_logisim1.png', name: '좋은 바', option: 'Large', price: '30000', quantity: 1, checked: true}];
 
 
 // 로컬스토리지 저장
@@ -29,37 +29,40 @@ function getProductsData() {
 // 로컬 스토리지 받기
 function getProducts() {
   setProductNum();
-  if (productBox.innerHTML !== '') productBox.innerHTML = '';
 
   sum = 0;
-
 
   const element = getProductsData().map((value, i) => {
     const index = i + 1;
     const {image, name, option, price, quantity} = value;
     const result = price * quantity;
-    sum += result;
+    sum = value.checked === true ? sum + result : sum;
+
 
     return paintProductBox(index, image, name, option, price, quantity, result);
   });
   productBox.innerHTML = element.join('\n');
+  emptyCart(sum);
+}
 
-  totalPrice.value = `총 ${sum.toLocaleString()}원 주문하기`;
-  if (sum === 0) {
+// 장바구니 비었을 때 함수
+function emptyCart(sum) {
+  if (!sum) {
     totalPrice.disabled = 'disabled';
     totalPrice.classList.add('disabled');
     totalPrice.value = `장바구니가 비었습니다.`;
     totalPrice.style = `
-      background-color: rgb(57, 56, 56);
-      color: white;
-      width: 290px;
-      height: 60px;
-      border-radius: 5px;
+    background-color: rgb(57, 56, 56);
+    color: white;
+    width: 290px;
+    height: 60px;
+    border-radius: 5px;
       text-align: center;
       font-size: 24px;
       font-weight: 600;
       cursor: auto;`;
   } else {
+    totalPrice.value = `총 ${sum.toLocaleString()}원 주문하기`;
     totalPrice.removeAttribute('disabled');
     totalPrice.classList.remove('disabled');
     totalPrice.removeAttribute('style');
@@ -107,15 +110,16 @@ function setProductNum() {
 
 // 전체삭제 버튼 클릭 함수
 function handleDeleteAllBtnClick() {
-  if (localStorage.products.length === 0) {
+  if (JSON.parse(localStorage.getItem(PRODUCTS_KEY)).length === 0) {
     alert('장바구니가 비어있습니다.');
     return;
   }
+
   const result = confirm('장바구니를 비우시겠습니까?');
 
   if (result) {
     saveProducts([]);
-    productBox.innerHTML = '';
+    getProducts();
   }
 }
 
@@ -123,12 +127,24 @@ function handleDeleteAllBtnClick() {
 // 전체 체크박스 클릭 함수
 function handleCheckAllClick(e) {
   const checkBoxes = document.querySelectorAll('.product-check');
-  Array.from(checkBoxes).forEach((x) => x.checked = e.target.checked);
-
   const products = getProductsData();
-  checkAllBox.checked === true ?
-  products.forEach(product => product.checked = true) :
-  products.forEach(product => product.checked = false);
+  let total = 0;
+  products.forEach((product) => {
+    total += product.quantity * product.price;
+  });
+
+  if (checkAllBox.checked === true) {
+    products.forEach((product) => product.checked = true);
+  } else {
+    products.forEach((product) => product.checked = false);
+    total = 0;
+  }
+
+  emptyCart(total);
+
+  Array.from(checkBoxes).forEach((x) => {
+    x.checked = e.target.checked;
+  });
 
   saveProducts(products);
 }
@@ -137,6 +153,8 @@ function handleCheckAllClick(e) {
 // 선택삭제 클릭 함수
 function hadleDeleteBtnClick() {
   const result = confirm('선택한 상품을 제거하시겠습니까?');
+  const products = getProductsData();
+  const checkBoxes = document.querySelectorAll('.product-check');
 
   if (result) {
     Array.from(checkBoxes).forEach((checkBox) => {
@@ -154,7 +172,7 @@ function hadleDeleteBtnClick() {
 // oerderBtn 클릭 함수
 function handleOrderBtnClick() {
   const products = getProductsData();
-  const filtered = products.filter(product => {
+  const filtered = products.filter((product) => {
     return product.checked === true;
   });
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(filtered));
@@ -206,10 +224,12 @@ function changeValue(target) {
 function handleCheck(checkbox) {
   // 개별 체크박스 선언
   const checkBoxes = document.querySelectorAll('.product-check');
-  let isChecked = Array.from(checkBoxes).every((box) => box.checked);
+  const isChecked = Array.from(checkBoxes).every((box) => box.checked);
 
   if (isChecked) {
     checkAllBox.checked = true;
+  } else {
+    checkAllBox.checked = false;
   }
 
   const value = checkbox.checked;
@@ -233,18 +253,14 @@ function handleCheck(checkbox) {
     saveProducts(products);
   }
 
-  if (sum !== 0) {
-    totalPrice.value = `총 ${sum.toLocaleString()}원 주문하기`;
-  } else {
-    totalPrice.value = `장바구니가 비었습니다.`;
-  }
+  emptyCart(sum);
 }
 
 
 /* main */
 
 // 화면에 localStorage 띄우기
-// saveProducts(DEFAUTL_PRODUCTS);
+saveProducts(DEFAUTL_PRODUCTS);
 getProducts();
 
 
@@ -263,13 +279,8 @@ deleteBtn.addEventListener('click', hadleDeleteBtnClick);
 totalPrice.addEventListener('click', handleOrderBtnClick);
 
 
-
-
-
-
-
 // 장바구니 넣을 때
-// const product = Api.get('localhost:5000/api/product/', 'productId');
+// const product = Api.get('/api/product/', 'productId');
 // const {_id, name, image, price} = product;
 // const option = ;
 
