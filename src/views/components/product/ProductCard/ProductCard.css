@@ -27,12 +27,12 @@
 .ProductCard__imageContainer {
     display: flex;
     justify-content: center;
+    min-height: 250px;
 }
 
 .ProductCard__image {
     border-radius: 8px;
     width: 100%;
-    min-height: 200px;
 }
 
 .ProductCard__body {
