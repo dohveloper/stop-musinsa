@@ -203,3 +203,72 @@ export default class ProductDetail extends HTMLElement {
 }
 
 window.customElements.define('product-detail', ProductDetail);
+
+
+
+
+
+
+
+
+
+
+// 각 버튼 쿼리셀렉터로 선언
+const buyBtn = document.querySelector('.ProductDetailPayment__buyButton');
+const cartBtn = document.querySelector('ProductDetailPayment__cartButton');
+
+
+// 장바구니 버튼 클릭
+async function handleCartBtnClick() {
+    const result = confirm('장바구니에 추가하시겠습니까?');
+
+    if(result) {
+        const cartArr = []; // 이거는 전역에 하나 있어야할듯
+        const product = fetchProduct();
+        const {image, _id, name, price} = product;
+        const option = product.sizes.size.sizeName;
+
+        const data = {
+            image,
+            _id,
+            name,
+            price,
+            option,
+            quantity: 1,
+            checked: true,
+        }
+        cartArr.push(data);
+
+        localStorage.setItem('products', JSON.stringify(cartArr));
+        alert('장바구니에 추가했습니다.');
+    }
+}
+
+
+// 바로구매 버튼 클릭
+async function handleBuyBtnClick() {
+    const result = confirm('상품을 구매하시겠습니까?');
+
+    if(result) {
+        const product = fetchProduct();
+        const {image, _id, name, price} = product;
+        const option = product.sizes.size.sizeName;
+
+        const data = [{
+            image,
+            _id,
+            name,
+            price,
+            option,
+            quantity: 1,
+            checked: true,
+        }];
+
+        localStorage.setItem('products', JSON.stringify(data));
+        location.replace('/pay');
+    }
+}
+
+//  각 버튼 클릭 이벤트
+cartBtn.addEventListener('click', handleCartBtnClick);
+buyBtn.addEventListener('click', handleBuyBtnClick);

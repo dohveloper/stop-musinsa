@@ -59,13 +59,14 @@ async function handleFormSubmit(e) {
 }
 
 function getProducts() {
-  const element = JSON.parse(localStorage.getItem('products')).map((value) => {
-    const {name, image, option, quantity, price} = value;
-
-    return paintProducts(name, image, option, quantity, price);
-  });
-
-  productsMain.innerHTML = element.join('\n');
+  if(localStorage.getItem('products')) {
+    const element = JSON.parse(localStorage.getItem('products')).map((value) => {
+      const {name, image, option, quantity, price} = value;
+  
+      return paintProducts(name, image, option, quantity, price);
+    })
+    productsMain.innerHTML = element.join('\n');
+  }
 }
 
 function paintProducts(name, image, option, qunatity, price) {
@@ -89,12 +90,27 @@ function paintProducts(name, image, option, qunatity, price) {
 }
 
 function priceSum() {
-  const productArray = JSON.parse(localStorage.getItem('products'));
-  const priceResult = productArray.map((product) => {
-    return product.quantity * product.price;
-  }).reduce((acc, cur) => acc + cur);
-
-  submitBtn.value = `${priceResult.toLocaleString()}원 결제`;
+  if(localStorage.getItem('products')) {
+    const productArray = JSON.parse(localStorage.getItem('products'));
+    const priceResult = productArray.map((product) => {
+      return product.quantity * product.price;
+    }).reduce((acc, cur) => acc + cur);
+    console.log(priceResult);
+  
+    submitBtn.value = `${priceResult.toLocaleString()}원 결제`
+    return;
+  }
+  submitBtn.value = `상품이 없습니다.`;
+  submitBtn.disabled = true;
+  submitBtn.style = `
+  background-color: rgb(57, 56, 56);
+  color: white;
+  width: 290px;
+  height: 60px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: auto;`;
 }
 
 form.addEventListener('submit', handleFormSubmit);
