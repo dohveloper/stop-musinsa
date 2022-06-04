@@ -103,7 +103,6 @@ export default class HeaderMobile extends HTMLElement {
     // admin 계정에 대응해 admin navigation을 동적으로 생성
     if (token) {
       const user = await Api.get('/api/user');
-      console.log(user);
       if (user.role === 'admin') {
         nav.innerHTML += `
             <li class="HeaderMobileDefaultNavItem">

@@ -44,9 +44,11 @@ export default class HeaderPC extends HTMLElement {
                             <li class="HeaderMainNavItem">
                                 <a class="HeaderMainNavItem__link" href="/cart">장바구니</a>
                             </li>
-                            <li class="HeaderMainNavItem">
-                                <a class="HeaderMainNavItem__link Header__logout" href="#">로그아웃</a>
+                            <!--
+                            <li class="HeaderMainNavItem Header__logout">
+                                <a class="HeaderMainNavItem__link " href="#" >로그아웃</a>
                             </li>
+                            -->
                             `;
 
     const html = ` <div class="Header__main">
@@ -103,7 +105,7 @@ export default class HeaderPC extends HTMLElement {
                                 <a class="HeaderMemberMenu__link" href="/cart">장바구니</a>                                
                             </div>
                             <div class="HeaderMemberMenu">
-                                <a class="HeaderMemberMenu__link" href="#" onclick="alert('환영합니다?')">무신사 게섯거라에 오신 것을 환영합니다.</a>
+                                <a class="HeaderMemberMenu__link" href="#" onclick="alert('환영합니다!!!!!!!')">무신사 게섯거라에 오신 것을 환영합니다.</a>
                             </div>
                         </div>
                                 `;
@@ -118,12 +120,13 @@ export default class HeaderPC extends HTMLElement {
   }
   addLogoutFeature() {
     const logoutElements = document.querySelectorAll('.Header__logout');
-    console.log(logoutElements);
+
     for (const logoutElement of logoutElements) {
-      logoutElement.addEventListener('click', ()=>{
+      console.log(logoutElement);
+      logoutElement.addEventListener('click', () => {
         sessionStorage.removeItem('token');
         window.location.replace('/');
-      });
+      }, false);
     };
   }
 
