@@ -98,20 +98,20 @@ productRouter.post(
         };
         // populate위한 전처리
         if (Array.isArray(colors)) {
-          productInfo.colors = colors.map((id)=>{
+          productInfo.colors = colors.filter((id)=>id).map((id)=>{
             return {color: {_id: id}};
           });
         } else {
-          productInfo.colors = {color: {_id: colors}};
+          productInfo.colors = [{color: {_id: colors}}];
         }
         if (Array.isArray(sizes)) {
-          productInfo.sizes = sizes.map((id)=>{
+          productInfo.sizes = sizes.filter((id)=>id).map((id)=>{
             return {size: {_id: id}};
           });
         } else {
-          productInfo.sizes = {size: {_id: sizes}};
+          productInfo.sizes = [{size: {_id: sizes}}];
         }
-
+        console.log(productInfo);
         const product = await productService.addProduct(productInfo);
         res.status(201).json(product);
       } catch (error) {
@@ -171,20 +171,20 @@ productRouter.patch(
         };
         // populate위한 전처리
         if (Array.isArray(colors)) {
-          productInfo.colors = colors.map((id)=>{
+          productInfo.colors = colors.filter((id)=>id).map((id)=>{
             return {color: {_id: id}};
           });
         } else {
-          productInfo.colors = {color: {_id: colors}};
+          productInfo.colors = [{color: {_id: colors}}];
         }
         if (Array.isArray(sizes)) {
-          productInfo.sizes = sizes.map((id)=>{
+          productInfo.sizes = sizes.filter((id)=>id).map((id)=>{
             return {size: {_id: id}};
           });
         } else {
-          productInfo.sizes = {size: {_id: sizes}};
+          productInfo.sizes = [{size: {_id: sizes}}];
         }
-
+        console.log(productInfo);
         const product = await productService.setProduct(productId, productInfo);
         res.status(200).json(product);
       } catch (error) {

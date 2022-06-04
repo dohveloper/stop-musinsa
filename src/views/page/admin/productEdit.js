@@ -22,12 +22,15 @@ export default class ProductEdit {
     await this.productRender();
   }
 
+  // 상품 등록 form 렌더링
   async formRender(product) {
     this.product = product;
+    console.log(product);
     this.title.innerText = `상품 목록`;
     this.form.className = 'productRegisterForm';
     this.form.encType = 'multipart/form-data';
     const [colors, sizes, categories] = await Promise.all([Api.get('/api/category/color'), Api.get('/api/category/size'), Api.get('/api/category')]);
+
     console.log(colors, sizes, categories);
     this.form.innerHTML = `
         <label for='name'>제품명 : </label>
@@ -35,14 +38,15 @@ export default class ProductEdit {
         <label for='price'>가격 : </label>
         <input required name='price' type='number' id ='price' value='${product ? product.price : ''}'/>
         <label for='image'>상품 이미지 : </label>
-        <input required type="file" name="image" id="image" />
+        <input value='${product ? product.image : ''}' type="file" name="image" id="image" />
         <label for='detailImage'>상품 설명 : </label>
-        <input required name='detailImage' type='file' id ='detailImage'/>
+        <input value='${product ? product.detailImage : ''}' name='detailImage' type='file' id ='detailImage'/>
         <label for='brand'>브랜드 : </label>
         <input required name='brand' id ='brand' value='${product ? product.brand : ''}'/>
         <label for='sex'>성별 : </label>
         <label><input required type="radio" id='sex' name="sex" ${product && product.sex === 'male' ? 'checked' : null} value="male">male</label>
         <label><input required type="radio" id='sex' name="sex" ${product && product.sex === 'female' ? 'checked' : null }  value="female"/>female</label>
+        <label><input required type="radio" id='sex' name="sex" ${product && product.sex === 'uni' ? 'checked' : null }  value="uni"/>uni</label>
         <label for='season'>시즌 : </label>
         <input required name='season' id ='season' value='${product ? product.deliveryStart : ''}'/>
         <label for='deliveryStart'>츨고 정보 : </label>
@@ -55,13 +59,13 @@ export default class ProductEdit {
         `;
     colors.forEach((color, index)=>{
       this.form.innerHTML += `
-            <label><input type="checkbox" name="colors[${index}]" value='${color._id}'> ${color.colorName}</label>
+            <label><input ${product && product.colors.map((color)=>color.color.colorName).includes(color.colorName) ? 'checked' : null } type="checkbox" name="colors[${index}]" value='${color._id}'> ${color.colorName}</label>
         `;
     });
     this.form.innerHTML += `<p>사이즈 선택</p>`;
     sizes.forEach((size, index)=>{
       this.form.innerHTML += `
-            <label><input type="checkbox" name="sizes[${index}]" value='${size._id}'> ${size.sizeName}</label>
+            <label><input ${product && product.sizes.map((size)=>size.size.sizeName).includes(size.sizeName) ? 'checked' : null} type="checkbox" name="sizes[${index}]" value='${size._id}'> ${size.sizeName}</label>
         `;
     });
     this.form.innerHTML += `<p>카테고리</p>`;
@@ -82,6 +86,7 @@ export default class ProductEdit {
       e.preventDefault();
       let res;
       const data = new FormData(this.form);
+      console.log(data);
       if (e.submitter.id === 'update') {
         res = await fetch(`/api/product/${this.product._id}`, {
           method: 'PATCH',
@@ -99,11 +104,10 @@ export default class ProductEdit {
           body: data,
         });
       }
-      alert('수정되었습니다.');
       await this.render();
     });
   }
-
+  // 등록된 상품목록 렌더링
   async productRender() {
     while (this.ul.firstChild) {
       this.ul.removeChild(this.ul.firstChild);

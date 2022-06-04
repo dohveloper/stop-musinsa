@@ -47,8 +47,12 @@ export default class CategoryEdit {
               await Api.patch(`/api/category/main`, category.item, {newCategory: formData.get('main')});
             }
             await Api.patch(`/api/category/sub?categoryName=${category.item}&subCategoryName=${category.subItem}`, '', {newSubCategory: formData.get('sub')});
+            alert('수정되었습니다.');
+            location.reload();
           } else if (e.submitter.name === 'delete') {
             await Api.delete(`/api/category/${category._id}`, '', {replaceCategoryIdArray: []});
+            alert('삭제되었습니다.');
+            location.reload();
           }
         });
       });
@@ -71,6 +75,7 @@ export default class CategoryEdit {
         e.preventDefault();
         const data = new FormData(e.target);
         await Api.post('/api/category', Object.fromEntries(data));
+        alert('등록되었습니다.');
         location.reload();
       });
     });
