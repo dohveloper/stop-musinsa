@@ -3,6 +3,12 @@
 <img width="900" alt="before1" src="https://user-images.githubusercontent.com/32115010/172581149-2b03454a-3f5a-418e-b5fd-5c0ac68480d5.jpeg">
 
 
+[![frontend - dohveloper](https://img.shields.io/badge/frontend-dohveloper-blue?logo=blue)](https://github.com/dohveloper)
+[![frontend - minsu2344](https://img.shields.io/badge/frontend-minsu2344-blue?logo=blue)](https://github.com/minsu2344)
+[![frontend - gomiseki](https://img.shields.io/badge/backend-gomiseki-white?logo=blue)](https://github.com/gomiseki)
+[![frontend - dnjwm8612](https://img.shields.io/badge/backend-dnjwm8612-white?logo=blue)](https://github.com/dnjwm8612)
+
+
 ## TOC
 - [0. 시작하며...](#0-시작하며)
 - [1. 주어진 상황](#1-주어진-상황)
